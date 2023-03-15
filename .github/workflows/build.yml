@@ -1,0 +1,19 @@
+name: Build and Test
+
+on:
+  # Run any time code is pushed to main.
+  push:
+    branches:
+      - main
+
+  # Run on all pull requests
+  pull_request:
+
+  workflow_dispatch:
+
+jobs:
+  build-and-test-ios:
+    name: Build Cache iOS
+    uses: krogerco/Shared-CI-Workflow-iOS/.github/workflows/build.yml@v1.0.0
+    with:
+      FILENAME: Cache.xcworkspace
