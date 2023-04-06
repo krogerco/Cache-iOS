@@ -238,6 +238,7 @@ final class CacheTestCases: XCTestCase {
         }
 
         // When
+        cache?.layer.save()
         cache = nil
         cache = TestMemoryCache(policies: [], identifier: #function, location: location)
 
