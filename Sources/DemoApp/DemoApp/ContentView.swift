@@ -23,19 +23,48 @@
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
+    @StateObject var model = SampleModel()
+    @State private var showingSheet = false
+    @State private var settingsDetent: PresentationDetent = .medium
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+    var body: some View {
+        NavigationStack {
+            VStack {
+                Text("Cache Demo")
+                    .font(.largeTitle)
+                    .padding([.bottom], 24.0)
+
+                VStack(alignment: .leading) {
+                    // swiftlint:disable:next line_length
+                    Text("Select a product in the picker. The name label will update immediately if the value is in the cache.")
+                        .padding([.bottom], 6.0)
+
+                    Text("Maximum items allowed in cache: 4")
+                        .font(.caption)
+
+                    Text("Maximum lifetime (in seconds) allowed in cache: 10.0")
+                        .font(.caption)
+                }
+
+                Divider()
+
+                Picker("Product", selection: $model.selectedProduct) {
+                    ForEach(SampleProduct.allCases) { product in
+                        Text(product.rawValue)
+                    }
+                }
+                .pickerStyle(.inline)
+
+                Divider()
+
+                if let name = model.productInfo?.name {
+                    Text("Name: \(name)")
+                } else {
+                    ProgressView()
+                }
+
+                Spacer()
+            }
+        }
     }
 }

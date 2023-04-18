@@ -30,7 +30,7 @@ public enum CachePolicy {
     /// When this count is exceeded, the least recently used values will be purged.
     case maxItemCount(Int)
 
-    /// The maximum time a value should remain in the source.
+    /// The maximum time a value should remain in the source in seconds.
     /// Values that have been in the cache longer than this will be purged.
     case maxItemLifetime(TimeInterval)
 
