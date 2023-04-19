@@ -24,8 +24,6 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var model = SampleModel()
-    @State private var showingSheet = false
-    @State private var settingsDetent: PresentationDetent = .medium
 
     var body: some View {
         NavigationStack {

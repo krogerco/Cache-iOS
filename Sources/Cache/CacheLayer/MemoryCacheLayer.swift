@@ -54,6 +54,8 @@ final class MemoryCacheLayer<Key: CacheKey, Value: Codable>: CacheLayer {
     }
 
     func setup(config: CacheConfig) {
+        self.config = config
+
         // Load from disk
         if let location = config.location {
             let file = CodableFile<[Key: Item]>(name: "MemoryCacheLayer.json", directory: location.directory)
@@ -62,10 +64,7 @@ final class MemoryCacheLayer<Key: CacheKey, Value: Codable>: CacheLayer {
                     cache = try file.load()
                 }
             } catch {
-                config.delegate?.logDebugMessage(
-                    "MemoryCache unable to load from file \(location.url.path)",
-                    error: error
-                )
+                config.eventPublisher.send(.unableToLoad(location.url, error))
             }
             self.file = file
         } else {
@@ -112,10 +111,7 @@ final class MemoryCacheLayer<Key: CacheKey, Value: Codable>: CacheLayer {
                 try file.save(cache)
                 needsSave = false
             } catch {
-                config.delegate?.logDebugMessage(
-                    "MemoryCache unable to save to file \(file.name)",
-                    error: error
-                )
+                config.eventPublisher.send(.unableToSave(config.location?.url, error))
             }
         }
     }
@@ -192,9 +188,7 @@ final class MemoryCacheLayer<Key: CacheKey, Value: Codable>: CacheLayer {
                     let keysToEvict = items.map({ $0.key })[0 ..< countToEvict]
 
                     if !keysToEvict.isEmpty {
-                        config.delegate?.logDebugMessage(
-                            "Max count of \(maxItemCount) exceeded, evicting \(countToEvict) items from cache."
-                        )
+                        config.eventPublisher.send(.maxCountExceeded(countToEvict))
                         keysToEvict.forEach { cache.removeValue(forKey: $0) }
                         markDirty()
                     }
@@ -207,8 +201,8 @@ final class MemoryCacheLayer<Key: CacheKey, Value: Codable>: CacheLayer {
                     .map { $0.key }
 
                 if !keysToEvict.isEmpty {
+                    config.eventPublisher.send(.maxLifetimeExceeded(keysToEvict.count))
                     for key in keysToEvict {
-                        config.delegate?.logDebugMessage("Max time exceeded, evicting \(key) from cache.")
                         cache.removeValue(forKey: key)
                     }
                     markDirty()
