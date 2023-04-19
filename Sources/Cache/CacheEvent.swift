@@ -20,15 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Combine
 import Foundation
 
-class CacheConfig {
-    let location: CacheLocation?
-    let eventPublisher: EventPublisher
+/// Cache internal events that might be useful for debugging.
+public enum CacheEvent {
+    /// Cache was unable to load from the file. Will happen on first launch or if the Value type changes.
+    case unableToLoad(URL, Error)
 
-    init(location: CacheLocation? = nil, eventPublisher: EventPublisher = EventPublisher()) {
-        self.location = location
-        self.eventPublisher = eventPublisher
-    }
+    /// Cache was unable to save to the file.
+    case unableToSave(URL?, Error)
+
+    /// The maximum item count policy was exceeded.
+    /// The associated value is the number of items evicted from the cache.
+    case maxCountExceeded(Int)
+
+    /// The maximum item lifetime policy was exceeded.
+    /// The associated value is the number of items evicted from the cache.
+    case maxLifetimeExceeded(Int)
 }

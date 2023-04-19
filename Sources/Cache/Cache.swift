@@ -20,14 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import Combine
 import Foundation
+
+typealias EventPublisher = PassthroughSubject<CacheEvent, Never>
 
 /// A memory based cache with configurable policies and optional persistence.
 public final class Cache<Key: CacheKey, Value: Codable> {
     let lock = NSRecursiveLock()
     let layer: MemoryCacheLayer<Key, Value>
-    weak var delegate: CacheDelegate?
     let identifier: String
+
+    /// Publishes interesting events during the cache lifecycle. Can be useful for debugging.
+    public var events: AnyPublisher<CacheEvent, Never> { eventPublisher.eraseToAnyPublisher() }
+
+    let eventPublisher = EventPublisher()
 
     /// Create a ``Cache``.
     /// - Parameters:
@@ -39,15 +46,13 @@ public final class Cache<Key: CacheKey, Value: Codable> {
     public init(
         policies: [CachePolicy] = [.maxItemCount(1000), .maxItemLifetime(3600)],
         identifier: String,
-        delegate: CacheDelegate? = nil,
         location: CacheLocation? = nil
     ) {
         self.layer = MemoryCacheLayer(policies: policies)
-        self.delegate = delegate
         self.identifier = identifier
 
         // Setup
-        let config = CacheConfig(location: location, delegate: delegate)
+        let config = CacheConfig(location: location, eventPublisher: eventPublisher)
         layer.setup(config: config)
     }
 

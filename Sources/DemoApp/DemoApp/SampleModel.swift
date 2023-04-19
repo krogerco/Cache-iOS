@@ -74,7 +74,7 @@ struct ProductProvider {
 class SampleModel: ObservableObject {
     // The currently selected product and it's details.
     @Published var selectedProduct: SampleProduct = .product3
-    @Published var productInfo: ProductInfo?
+    @Published private (set) var productInfo: ProductInfo?
 
     // Sample data provider.
     private let provider = ProductProvider()
@@ -95,7 +95,7 @@ class SampleModel: ObservableObject {
             guard let self else { return }
 
             // If the info is in the cache, update immediately.
-            if let info = cache[product] {
+            if let info = self.cache[product] {
                 self.productInfo = info
             } else {
                 // Info not in the cache. Fetch the info and update when complete.
@@ -111,5 +111,23 @@ class SampleModel: ObservableObject {
         }
         .store(in: &cancellables)
 
+        // Print debug messages from the cache.
+        cache.events.sink { event in
+            switch event {
+            case .maxCountExceeded(let count):
+                print("Cache maximum item count exceeded. \(count) items were evicted.")
+
+            case .maxLifetimeExceeded(let count):
+                print("Cache maximum item lifetime exceeded. \(count) items were evicted.")
+
+            case .unableToLoad(let url, let error):
+                print("Unable to load from file at: \(url.path): \(error)")
+
+            case .unableToSave(let url, let error):
+                let path = url?.path ?? "<unknown>"
+                print("Unable to save to file at: \(path): \(error)")
+            }
+        }
+        .store(in: &cancellables)
     }
 }
