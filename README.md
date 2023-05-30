@@ -56,9 +56,7 @@ Cache has full DocC documentation. After adding to your project, `Build Document
 
 ### Online Documentation
 
-[Getting Started](Sources/Telemetry/Documentation.docc/GettingStarted.md)
-[Full Documentation](https://krogerco.github.io/Cache-iOS.git/documentation/cache)
-
+[Full Documentation](https://krogerco.github.io/Cache-iOS/documentation/cache)
 
 ## Communication
 
