@@ -80,8 +80,8 @@ final class MemoryCacheLayer<Key: CacheKey, Value: Codable>: CacheLayer {
         saveCancellable = savePublisher
             .throttle(for: 5.0, scheduler: DispatchQueue.global(qos: .utility), latest: false)
             .sink { [weak self] _ in
-            self?.save()
-        }
+                self?.save()
+            }
 
 #if os(iOS)
         notificationIdentifier = NotificationCenter.default.addObserver(
@@ -209,5 +209,17 @@ final class MemoryCacheLayer<Key: CacheKey, Value: Codable>: CacheLayer {
                 }
             }
         }
+    }
+
+    var keys: [Key] {
+        lock.lock(); defer { lock.unlock() }
+
+        return Array(cache.keys)
+    }
+
+    var values: [Value] {
+        lock.lock(); defer { lock.unlock() }
+
+        return cache.values.map { $0.value }
     }
 }

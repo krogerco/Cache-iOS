@@ -111,4 +111,12 @@ class MockCacheLayer: CacheLayer {
         policyInspector?(policies)
         appliedPolicies += policies
     }
+
+    var keys: [Key] {
+        return Array(cache.keys)
+    }
+
+    var values: [Value] {
+        return Array(cache.values)
+    }
 }

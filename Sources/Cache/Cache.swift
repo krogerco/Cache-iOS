@@ -141,4 +141,18 @@ public final class Cache<Key: CacheKey, Value: Codable> {
 
         layer.removeAll()
     }
+
+    /// All of the keys currently in the cache.
+    public var keys: [Key] {
+        lock.lock(); defer { lock.unlock() }
+
+        return layer.keys
+    }
+
+    /// All of the values currently in the cache.
+    public var values: [Value] {
+        lock.lock(); defer { lock.unlock() }
+
+        return layer.values
+    }
 }
