@@ -69,6 +69,12 @@ protocol CacheLayer {
     /// Apply the passed policies to the cache.
     /// - Parameter policies: Policies to be applied.
     func apply(_ policies: [CachePolicy])
+
+    /// All of the keys currently in the cache.
+    var keys: [Key] { get }
+
+    /// All of the values currently in the cache.
+    var values: [Value] { get }
 }
 
 // MARK: -

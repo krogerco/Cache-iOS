@@ -247,4 +247,34 @@ final class CacheTestCases: XCTestCase {
             XCTAssertEqual(cache["Hello"], "World")
         }
     }
+
+    func testAllKeys() throws {
+        // Given
+        let cache = TestMemoryCache(policies: [], identifier: #function)
+        XCTAssertTrue(cache.layer.cache.isEmpty)
+
+        cache.set(value: "World", for: "Hello")
+
+        // When
+        let keys = cache.keys
+
+        // Then
+        XCTAssertEqual(keys.count, 1)
+        XCTAssertEqual(keys[0], "Hello")
+    }
+
+    func testAllValues() throws {
+        // Given
+        let cache = TestMemoryCache(policies: [], identifier: #function)
+        XCTAssertTrue(cache.layer.cache.isEmpty)
+
+        cache.set(value: "World", for: "Hello")
+
+        // When
+        let values = cache.values
+
+        // Then
+        XCTAssertEqual(values.count, 1)
+        XCTAssertEqual(values[0], "World")
+    }
 }
