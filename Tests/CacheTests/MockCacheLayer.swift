@@ -23,7 +23,7 @@
 @testable import Cache
 import Foundation
 
-extension CacheItem: Equatable where Key == String, Value: Equatable {
+extension CacheItem: @retroactive Equatable where Key == String, Value: Equatable {
     public static func == (lhs: CacheItem<Key, Value>, rhs: CacheItem<Key, Value>) -> Bool {
         lhs.key == rhs.key &&
             lhs.creationDate == rhs.creationDate &&
