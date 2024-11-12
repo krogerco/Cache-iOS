@@ -74,7 +74,7 @@ struct ProductProvider {
 class SampleModel: ObservableObject {
     // The currently selected product and it's details.
     @Published var selectedProduct: SampleProduct = .product3
-    @Published private (set) var productInfo: ProductInfo?
+    @Published private(set) var productInfo: ProductInfo?
 
     // Sample data provider.
     private let provider = ProductProvider()

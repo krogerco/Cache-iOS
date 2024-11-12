@@ -13,6 +13,12 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+## 1.0.1
+
+### Updated
+
+- Removed requirement that CacheKeys need to be Comparable. Was not needed.
+
 ## 1.0.0
 
 ### Added
