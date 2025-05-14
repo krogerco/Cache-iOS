@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 @testable import Cache
-import Gauntlet
+import GauntletLegacy
 import XCTest
 
 class CacheLocationTests: XCTestCase {

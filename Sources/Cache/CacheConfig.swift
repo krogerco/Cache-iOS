@@ -23,7 +23,7 @@
 import Combine
 import Foundation
 
-class CacheConfig {
+struct CacheConfig {
     let location: CacheLocation?
     let eventPublisher: EventPublisher
 

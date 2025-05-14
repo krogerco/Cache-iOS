@@ -23,4 +23,4 @@
 import Foundation
 
 /// The key used to look items up in cache objects.
-public typealias CacheKey = Hashable & Codable
+public typealias CacheKey = Hashable & Codable & Sendable
