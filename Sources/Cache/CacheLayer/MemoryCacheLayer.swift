@@ -28,7 +28,7 @@ import UIKit
 #endif
 
 /// A fully in-memory based cache with persistence.
-final class MemoryCacheLayer<Key: CacheKey, Value: Codable>: CacheLayer {
+final class MemoryCacheLayer<Key: CacheKey, Value: Codable>: CacheLayer, @unchecked Sendable {
     var config = CacheConfig()
     let policies: [CachePolicy]
     var cache: [Key: Item] = [:]
@@ -89,16 +89,16 @@ final class MemoryCacheLayer<Key: CacheKey, Value: Codable>: CacheLayer {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            guard let strongSelf = self else { return }
+            guard let self else { return }
 
-            strongSelf.lock.lock(); defer { strongSelf.lock.unlock() }
+            lock.lock(); defer { lock.unlock() }
 
             // Bail if empty.
-            guard !strongSelf.cache.isEmpty else { return }
+            guard !cache.isEmpty else { return }
 
             // Apply a policy that will purge half of the current cache.
-            let purgeAmount = strongSelf.cache.count / 2
-            strongSelf.apply([.maxItemCount(purgeAmount)])
+            let purgeAmount = cache.count / 2
+            apply([.maxItemCount(purgeAmount)])
         }
 #endif
     }

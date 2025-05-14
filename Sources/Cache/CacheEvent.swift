@@ -23,7 +23,7 @@
 import Foundation
 
 /// Cache internal events that might be useful for debugging.
-public enum CacheEvent {
+public enum CacheEvent: Sendable {
     /// Cache was unable to load from the file. Will happen on first launch or if the Value type changes.
     case unableToLoad(URL, Error)
 

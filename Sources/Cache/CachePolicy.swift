@@ -25,7 +25,7 @@ import Foundation
 /// Policies that may be applied to each cache source.
 /// Generally, you would create a different and more lenient policy for each level of cache source.
 /// Specifying no policies results in caches with unbounded growth.
-public enum CachePolicy {
+public enum CachePolicy: Sendable {
     /// The maximum number of key/values the source should track.
     /// When this count is exceeded, the least recently used values will be purged.
     case maxItemCount(Int)

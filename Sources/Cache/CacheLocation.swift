@@ -23,7 +23,7 @@
 import Foundation
 
 /// Specifies a directory where ``CacheLayer``s are stored.
-public struct CacheLocation {
+public struct CacheLocation: Sendable {
     /// Name of this location.
     public let locationName: String
 

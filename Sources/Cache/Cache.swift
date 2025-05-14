@@ -26,7 +26,7 @@ import Foundation
 typealias EventPublisher = PassthroughSubject<CacheEvent, Never>
 
 /// A memory based cache with configurable policies and optional persistence.
-public final class Cache<Key: CacheKey, Value: Codable> {
+public final class Cache<Key: CacheKey, Value: Codable>: @unchecked Sendable {
     let lock = NSRecursiveLock()
     let layer: MemoryCacheLayer<Key, Value>
     let identifier: String

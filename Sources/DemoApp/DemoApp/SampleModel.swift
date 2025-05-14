@@ -44,7 +44,7 @@ struct ProductInfo: Codable {
 // Object responsible for providing product information.
 // Typically this would be a network call.
 struct ProductProvider {
-    func getInfo(for product: SampleProduct, _ completion: @escaping (ProductInfo) -> Void) {
+    func getInfo(for product: SampleProduct, _ completion: @escaping @Sendable (ProductInfo) -> Void) {
         let info: ProductInfo
 
         switch product {
@@ -71,6 +71,7 @@ struct ProductProvider {
 }
 
 // Sample view model that manages the selected product and the fetched details for that product.
+@MainActor
 class SampleModel: ObservableObject {
     // The currently selected product and it's details.
     @Published var selectedProduct: SampleProduct = .product3
@@ -101,11 +102,15 @@ class SampleModel: ObservableObject {
                 // Info not in the cache. Fetch the info and update when complete.
                 self.productInfo = nil
                 self.provider.getInfo(for: product) { info in
-                    // Update the cache.
-                    self.cache[product] = info
+                    Task { @MainActor [weak self] in
+                        guard let self else { return }
 
-                    // Publish the info.
-                    self.productInfo = info
+                        // Update the cache.
+                        self.cache[product] = info
+
+                        // Publish the info.
+                        self.productInfo = info
+                    }
                 }
             }
         }
